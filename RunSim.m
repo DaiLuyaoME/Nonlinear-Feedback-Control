@@ -19,6 +19,6 @@ trajParameters.acc = 10;
 trajParameters.jerk = 800;
 trajParameters.snap = 64000;
 
-alpha =  1;
+alpha =  0;
 
 sim('main',[0 0.02]);
