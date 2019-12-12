@@ -25,6 +25,12 @@ m = modelInfo.mass;
 % idealJerkCoef = sum(m) * tau;
 % idealSnapCoef = sum(m) * ( 1/wn.^2 + 0.5 * tau.^2);
 %%
-sigma = 0;%噪声的标准差，单位m
+sigma = 2;%噪声的标准差，单位m
 varNoise=sigma*sigma;%注意，白噪声的模块中的Noise Power 需要填成varNoise*Ts
 noisePower=varNoise*Ts;
+%%
+fn = 1000;
+wn = fn * 2 * pi;
+lpFilter = tf(wn*wn,[1,2*0.7*wn,wn*wn]);
+% figure;bodeplot(lpFilter);
+lpFilter = c2d(lpFilter,1/5000,'tustin');
