@@ -26,13 +26,20 @@ plot(time,1e6*error2);
 plot(time,1e6*error3);
 %%
 figure;
-plot(time,1e6*out1);
+plot(time * 1000,1e6*out1);
 hold on;
-plot(time,1e6*out2);
-plot(time,1e6*out3);
+plot(time * 1000,1e6*out2);
+plot(time * 1000,1e6*out3);
+xlim([0,20]);
 %%
+alpha1 = 0.1;
+alpha2 = 0.56;
+alpha3 = 0.81;
+alpha4 = 0.95;
+alpha5 = 0.95;
+alpha6 = 0.95;
 figure;
-plot([alpha1,alpha2,alpha3,alpha4,alpha5,alpha6,alpha7,alpha8])
+plot(0:5,[alpha1,alpha2,alpha3,alpha4,alpha5,alpha6])
 %%
 time = noise.time;
 noiseValue = noise.signals.values;
@@ -58,4 +65,30 @@ Op.PhaseVisible = 'on';
 Op.Grid='on';
 
 figure;
-bodeplot(tempG,Op);
+bodeplot(tempG,Op);%%
+%%
+figure;
+subplot(3,1,1);
+plot(out.time * 1000,out.signals.values * 1e6,'linewidth',2);
+hold on;
+plot(out.time * 1000,30 * ones(size(out.time)),'linewidth',1);
+xlabel('time (ms)');
+ylabel('step response (\mum)');
+
+subplot(3,1,2);
+plot(Err.time * 1000,Err.signals.values * 1e6,'linewidth',2);
+hold on;
+plot(out.time * 1000,zeros(size(out.time)),'linewidth',1);
+
+xlabel('time (ms)');
+ylabel('error (\mum)');
+
+subplot(3,1,3);
+plot(nonlinearU.time * 1000,nonlinearU.signals.values * 1e6,'linewidth',2);
+hold on;
+plot(out.time * 1000,zeros(size(out.time)),'linewidth',1);
+
+xlabel('time (ms)');
+ylabel('u (\mum)');
+
+

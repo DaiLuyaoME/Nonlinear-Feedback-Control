@@ -3,15 +3,16 @@ alpha = 0.1;
 deltaRatio = 0.01;
 beginIndex = 1;
 endIndex = 30;
-iterationNum = 15;
+iterationNum = 6;
 alphaBuffer = zeros(iterationNum,1);
+outBuffer = [];
 alphaBuffer(1) = alpha;
 
 for i = 2:iterationNum
 
 tempAlpha = alpha;
 %% original run
-timeSpan = [0, 0.02];
+timeSpan = [0, 0.01];
 alpha =  tempAlpha;
 accCoef = 0;
 jerkCoef = 0;
@@ -24,6 +25,7 @@ trajParameters.snap = 64000;
 sim('main',timeSpan);
 errorData = Err.signals.values;
 dErrorData = dErr.signals.values;
+outBuffer = [outBuffer,out.signals.values];
 zeroIndex = errorData .* dErrorData <= 0;
 %figure;plot(errorData);
 
@@ -34,7 +36,7 @@ zeroIndex = zeroIndex(beginIndex:endIndex);
 
 
 %% first run
-timeSpan = [0, 0.02];
+timeSpan = [0, 0.01];
 accCoef = 0;
 jerkCoef = 0;
 snapCoef = 0;
@@ -48,7 +50,7 @@ errorData1 = errorData1(beginIndex:endIndex);
 dErrorData1 = dErrorData1(beginIndex:endIndex);
 zeroIndex1 = zeroIndex1(beginIndex:endIndex);
 %% second run
-timeSpan = [0, 0.02];
+timeSpan = [0, 0.01];
 accCoef = 0;
 jerkCoef = 0;
 snapCoef = 0;
@@ -66,9 +68,16 @@ deltaAlpha = tempAlpha * 2 * deltaRatio;
 e_alpha = (errorData2 - errorData1) / deltaAlpha;
 J_alpha = errorData' * e_alpha;
 J_alpha_square = e_alpha' * e_alpha;
-gamma = 0.8;
+gamma = 1;
 alpha = tempAlpha - gamma * J_alpha_square^-1 * J_alpha;
 alphaBuffer(i) = alpha;
 end
+%%
 figure;
-plot(alphaBuffer);
+tempx = (1:numel(alphaBuffer)) - 1;
+plot(tempx, alphaBuffer);
+%%
+num = size(outBuffer,1);
+tempTime = ((1:num) - 1) * 1/5000;
+figure;
+plot(tempTime * 1000,outBuffer(:,[1,end]) * 1e6);

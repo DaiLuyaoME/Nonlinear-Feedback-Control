@@ -1,6 +1,6 @@
 %% stability analysis under discrete time domain using cvx
 sys1 = feedback(GcDis*GpDis,1);
-sys2 = feedback(GcDis*GpDis*1.1,1);
+sys2 = feedback(GcDis*GpDis*1.65,1);
 [A1,B1,C1,D1] = ssdata(sys1);
 [A2,B2,C2,D2] = ssdata(sys2);
 n = size(A1,1);
